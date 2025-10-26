@@ -43,6 +43,4 @@ const TrackUser: React.FC<TrackUserProps> = ({ location, setLocation, setGeometr
     );
 };
 
-// Mount helper: creates a container in #app and renders the component there.
-// No more mount helper needed; TrackUser is now a pure component.
 export default TrackUser;

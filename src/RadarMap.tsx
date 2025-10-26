@@ -20,7 +20,7 @@ const RadarMap: React.FC<RadarMapProps> = ({ location, geometry }) => {
       center: location && location.longitude && location.latitude ? [location.longitude, location.latitude] : [-73.9911, 40.7342],
       zoom: 14,
     });
-    // Convert location to [lng, lat] array if possible
+    // Convert location to [lng, lat] array
     let lngLat: [number, number] | null = null;
     if (location && typeof location === 'object') {
       if (Array.isArray(location) && location.length === 2) {
@@ -34,7 +34,6 @@ const RadarMap: React.FC<RadarMapProps> = ({ location, geometry }) => {
         .setLngLat(lngLat)
         .addTo(map);
     }
-    // Optionally, you can use geometry here as needed
     if (geometry) {
       console.log('Geometry in RadarMap:', geometry);
     }
