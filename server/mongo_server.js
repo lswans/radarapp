@@ -1,26 +1,32 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import cors from 'cors';
-import dotenv from 'dotenv';
+import {config} from 'dotenv';
+import { defineConfig } from 'vite';
 
 // Load environment variables from .env file
-dotenv.config({ path: '../.env' });  // Adjust the path based on your file structure
+config(); 
 
-// Debug: Check if environment variables are loaded
-console.log('Environment variables loaded:', {
-    port: process.env.VITE_SERVER_PORT,
-    hasMongoString: !!process.env.VITE_MONGODB_CONNECTION_STRING
+export default defineConfig({
+  // Your Vite configuration
+  define: {
+    'process.env': process.env
+  }
 });
+// Check environment variables
+console.log(import.meta.env.VITE_SERVER_PORT)
+console.log(import.meta.env.VITE_MONGODB_CONNECTION_STRING)
+
 
 const app = express();
-const port = process.env.VITE_SERVER_PORT || 3001; // Fallback to 3001 if not defined
+const port = import.meta.env.VITE_SERVER_PORT || 3001; // Fallback to 3001
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
-app.use(express.json()); // Parse JSON bodies
+app.use(cors());
+app.use(express.json()); 
 
 // MongoDB setup
-const uri = process.env.VITE_MONGODB_CONNECTION_STRING;
+const uri = import.meta.env.VITE_MONGODB_CONNECTION_STRING;
 if (!uri) {
     console.error('MongoDB connection string is not defined in environment variables');
     process.exit(1);
@@ -46,7 +52,7 @@ async function connectToMongo() {
 // Connect to MongoDB when server starts
 connectToMongo();
 
-// POST endpoint for receiving tracking data
+// POST
 
 app.post('/api/track', async (req, res) => {
     try {
@@ -80,7 +86,7 @@ app.post('/api/track', async (req, res) => {
     }
 });
 
-// GET endpoint to retrieve tracking history
+// GET endpoint
 app.get('/api/tracks/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
@@ -97,7 +103,6 @@ app.get('/api/tracks/:userId', async (req, res) => {
     }
 });
 
-// Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
