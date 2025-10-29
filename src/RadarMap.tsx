@@ -20,6 +20,25 @@ const RadarMap: React.FC<RadarMapProps> = ({ location, geometry }) => {
       center: location && location.longitude && location.latitude ? [location.longitude, location.latitude] : [-73.9911, 40.7342],
       zoom: 14,
     });
+
+    
+    
+      Radar.searchGeofences({ 
+        tags: ['Area'], // your geofence tag
+        limit: 10
+      }).then((result) => {
+        console.log(result)
+        result.geofences.forEach(geofence => {
+          // Add each geofence as a polygon
+          
+          const feature = map.addPolygon({
+            type: 'Feature',
+            properties: { name: geofence.description },
+            geometry: geofence.geometry
+          });
+        });
+      });
+    
     // Convert location to [lng, lat] array
     let lngLat: [number, number] | null = null;
     if (location && typeof location === 'object') {
